@@ -201,19 +201,6 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 	}
 	
 	static toscr = function(v) {
-
-/*
-		var matx = new BBMOD_Matrix()
-			.Translate(0,0,0)
-//			.RotateEuler(BBox.AxisRotation)
-			.Scale(mscale)
-			;
-
-		var tp = matrix_transform_vertex(matx.Raw, v.X, v.Y, v.Z);
-		var vv = new BBMOD_Vec3(tp[0], tp[1], tp[2]);
-		var scr =  oCamera.camera.world_to_screen(vv);
-		return scr;
-*/
 		return oCamera.camera.world_to_screen(v);
 	}
 	
@@ -229,6 +216,8 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 			_s[_i] = toscr(_p[_i]);
 		}
 	
+		zsort_vec3(_s);
+		
 		return _s;
 	}
 	
@@ -260,43 +249,49 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 		return _size;
 	}
 
-	static DrawBoundingRect = function(_colour = c_white) {
-		var _size = 1; //__fit_size();
+	static DrawBoundingRect = function(_colour = c_yellow) {
+		draw_set_color(_colour);
+		var _size = mscale * BBox.Scale; // 1;
 		var _brect = __get_bounding_rectangle(_size);
 		__draw_bounds(_brect, _colour);	
 		
 		return _brect;
 	}
 	
-	static DrawBoundingBox =  function(_colour = c_red) {
-		draw_set_color(_colour);
-		
+	static DrawBoundingBox =  function(_isortho = false, _colour = c_red, _colour2 = c_maroon) {
 		var _size = mscale * BBox.Scale; // 1;
-	
+//		Orientate();
 		var _minz = __get_slice_z(BBox.Min.Z, _size);
 		var _maxz = __get_slice_z(BBox.Max.Z, _size);
+//		array_push(_minz, _maxz);
 
+		if(!_isortho) {
+			draw_line_colour(_minz[0].X, _minz[0].Y, _maxz[0].X, _maxz[0].Y, _colour, _colour2);
+			draw_line_colour(_minz[1].X, _minz[1].Y, _maxz[1].X, _maxz[1].Y, _colour, _colour2);
+			draw_line_colour(_minz[2].X, _minz[2].Y, _maxz[2].X, _maxz[2].Y, _colour, _colour2);
+			draw_line_colour(_minz[3].X, _minz[3].Y, _maxz[3].X, _maxz[3].Y, _colour, _colour2);
+
+			draw_set_color(_colour2);
+			draw_line(_maxz[0].X, _maxz[0].Y, _maxz[1].X, _maxz[1].Y);
+			draw_line(_maxz[0].X, _maxz[0].Y, _maxz[2].X, _maxz[2].Y);
+			draw_line(_maxz[3].X, _maxz[3].Y, _maxz[1].X, _maxz[1].Y);
+			draw_line(_maxz[3].X, _maxz[3].Y, _maxz[2].X, _maxz[2].Y);
+		}
+		
+		draw_set_color(_colour);
 		draw_line(_minz[0].X, _minz[0].Y, _minz[1].X, _minz[1].Y);
 		draw_line(_minz[0].X, _minz[0].Y, _minz[2].X, _minz[2].Y);
 		draw_line(_minz[3].X, _minz[3].Y, _minz[1].X, _minz[1].Y);
 		draw_line(_minz[3].X, _minz[3].Y, _minz[2].X, _minz[2].Y);
 
-		draw_line(_minz[0].X, _minz[0].Y, _maxz[0].X, _maxz[0].Y);
-		draw_line(_minz[1].X, _minz[1].Y, _maxz[1].X, _maxz[1].Y);
-		draw_line(_minz[2].X, _minz[2].Y, _maxz[2].X, _maxz[2].Y);
-		draw_line(_minz[3].X, _minz[3].Y, _maxz[3].X, _maxz[3].Y);
-
-		draw_line(_maxz[0].X, _maxz[0].Y, _maxz[1].X, _maxz[1].Y);
-		draw_line(_maxz[0].X, _maxz[0].Y, _maxz[2].X, _maxz[2].Y);
-		draw_line(_maxz[3].X, _maxz[3].Y, _maxz[1].X, _maxz[1].Y);
-		draw_line(_maxz[3].X, _maxz[3].Y, _maxz[2].X, _maxz[2].Y);
 	}
 	
-	static drawAxes = function() {
+	static drawAxes = function(_colour = c_grey) {
 		var _scr =  oCamera.camera.world_to_screen(new BBMOD_Vec3(0,0,0));
 		var _x = window_get_x();
 		var _y = window_get_y();
 		
+		draw_set_color(_colour);
 		draw_line(_x, _scr.Y, _x + window_get_width(), _scr.Y);
 		draw_line(_scr.X, _y, _scr.X, _y + window_get_height());
 		
@@ -308,6 +303,7 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 		var _tScale = mscale * BBox.Scale;
 		return new BBMOD_Matrix()
 			.RotateEuler(BBox.AxisRotation)
+			.RotateZ(global.rot)
 //			.Translate(BBox.Translation.X, 0 /* - BBox.Translation.Y */, BBox.Translation.Z)
 			.Translate(0, 0, BBox.Translation.Z)
 			.Scale(_tScale, _tScale, _tScale);

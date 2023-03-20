@@ -2,7 +2,7 @@
 // You can write your code in this editor
 // draw_sprite_stretched(global.resources.Sprites[0], 0, 0, 0, 128, 128);
 //draw_sprite_stretched(skin, 0, 0, 0, 128, 128);
-show_debug_message("oMain Draw GUI");
+// show_debug_message("oMain Draw GUI");
 
 if(keyboard_check_pressed(vk_space)) {
 	rn = wrap(++rn, 64);
@@ -14,8 +14,15 @@ if(keyboard_check_pressed(vk_f5)) {
 }
 var _rb = setRotationBase(rn);
 
+if(oCamera.camera.Orthographic) {
+	var _camtype = "Camera : Orthographic";
+} else {
+	var _camtype = "Camera : Perspective";
+}
 model.drawAxes();
+// model.DrawBoundingBox(oCamera.camera.Orthographic);
 model.DrawBoundingBox();
+model.DrawBoundingRect();
 
 draw_set_color(c_white);
 
@@ -38,11 +45,11 @@ draw_text(8, 48, "Frame = " + string(global.frame) +
 				 
 //draw_text(8, 64, "AxisBBox = " + string(model.AxisBBox));
 
-draw_text(8, 96, "Cam Pos : " + string(oCamera.camera.Position) +
-				 ", Cam Tgt : " + string(oCamera.camera.Target) + 
-				 ", Cam Up  : " + string(oCamera.camera.get_up()) +
-				 ", Cam Fwd  : " + string(oCamera.camera.get_forward()) + 
-				 ", Cam Ortho : " + string(oCamera.camera.Orthographic)
+draw_text(8, 96, "Cam Pos : " + string(oCam.camera.Position) +
+				 ", Cam Tgt : " + string(oCam.camera.Target) + 
+				 ", Cam Up  : " + string(oCam.camera.get_up()) +
+				 ", Cam Fwd  : " + string(oCam.camera.get_forward()) + 
+				 ", Cam Ortho : " + string(oCam.camera.Orthographic)
 				 );
 
 if(array_length(global.resources.Missing) > 0) {
@@ -73,3 +80,5 @@ ShowInt64Text("REAL DISPLAY HEIGHT : ", window_get_height());
 
 ShowInt64Text("REAL SCREEN WIDTH : ", display_get_gui_width());
 ShowInt64Text("REAL SCREEN HEIGHT : ",display_get_gui_height());
+ShowText("");
+ShowText(_camtype);

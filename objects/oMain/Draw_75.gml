@@ -13,4 +13,10 @@ if(keyboard_check(vk_escape)) {
 	game_end();
 }
 
+if(keyboard_check(vk_left)) {
+	global.rot = wrap(--global.rot, 360);
+}
+if(keyboard_check(vk_right)) {
+	global.rot = wrap(++global.rot, 360);
+}
 

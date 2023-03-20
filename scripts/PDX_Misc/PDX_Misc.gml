@@ -16,6 +16,61 @@ function get_sprite_assets() {
     return 0;
 }
 
+function zsort_vec3(_s) {
+	var _al = array_length(_s) - 1;
+	for(var _i = 0; _i < _al; _i++) {
+		if(_s[_i].Z > _s[_i+1].Z) {
+			var _t = _s[_i];
+			_s[_i] = _s[_i+1];
+			_s[_i+1] = _t;
+		}
+	}
+}
+
+function ysort_vec3(_s) {
+	var _al = array_length(_s) - 1;
+	for(var _i = 0; _i < _al; _i++) {
+		if(_s[_i].Y > _s[_i+1].Y) {
+			var _t = _s[_i];
+			_s[_i] = _s[_i+1];
+			_s[_i+1] = _t;
+		}
+	}
+}
+
+function xsort_vec3(_s) {
+	var _al = array_length(_s) - 1;
+	for(var _i = 0; _i < _al; _i++) {
+		if(_s[_i].X > _s[_i+1].X) {
+			var _t = _s[_i];
+			_s[_i] = _s[_i+1];
+			_s[_i+1] = _t;
+		}
+	}
+}
+
+
+function set_camera(_camera) {
+		if(_camera.Orthographic) {
+		_camera.Target = new BBMOD_Vec3(0, 0, 0);
+		_camera.Position = new BBMOD_Vec3(1000, 0, 0);
+		_camera.Width = window_get_width();
+		_camera.Height = window_get_height();
+
+		_camera.DirectionUp = global.camup;
+		_camera.ZNear = -32768;
+		_camera.ZFar = 32768;
+	} else {	
+		_camera.Target = new BBMOD_Vec3(0, 0, 0);
+		_camera.Position = new BBMOD_Vec3(1000, 0, -1000);
+
+		_camera.DirectionUp = global.camup;
+		_camera.ZNear = 0.1;
+		_camera.ZFar = 32768;
+		_camera.Fov = 60;
+	}
+}
+
 function wrap(v, max) {
 	while(v > max) {
 		v -= max;
