@@ -5,7 +5,7 @@ animIdx = 0;
 model = undefined;	
 
 oCam = instance_create_layer(0, 0, layer, oCamera);
-oRend = instance_create_layer(0, 0, layer, oRenderer);
+
 
 //	model = new PDX_Model("Character/Character.bbmod", true, false, 0, 180, 0, 1, { Size: { X: 3.62, Y: 1.05, Z: 3.76} });
 //	animIdx = 2;
@@ -27,6 +27,6 @@ oRend = instance_create_layer(0, 0, layer, oRenderer);
 
 // animationPlayer = new BBMOD_AnimationPlayer(model);
 if(is_undefined(model)) {
-	model = new PDX_Model("cube/castle.bbmod", false, false, 180);
+	model = new PDX_Model("cube/castle.bbmod");
 }
 global.running = true;

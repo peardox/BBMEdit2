@@ -14,3 +14,6 @@ if(global.camera_ortho) {
 global.have_camera = true;
 
 
+renderer = new BBMOD_DefaultRenderer();
+renderer.UseAppSurface = true;
+renderer.RenderScale = 1;

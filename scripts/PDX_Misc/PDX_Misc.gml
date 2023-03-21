@@ -62,7 +62,7 @@ function set_camera(_camera) {
 		_camera.ZFar = 32768;
 	} else {	
 		_camera.Target = new BBMOD_Vec3(0, 0, 0);
-		_camera.Position = new BBMOD_Vec3(1000, 0, -1000);
+		_camera.Position = new BBMOD_Vec3(1000, 0, 1000);
 
 		_camera.DirectionUp = global.camup;
 		_camera.ZNear = 0.1;

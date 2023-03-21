@@ -130,7 +130,6 @@
     {"name":"BBMOD_ShParticleDepth","order":11,"path":"shaders/BBMOD_ShParticleDepth/BBMOD_ShParticleDepth.yy",},
     {"name":"BBMOD_Camera","order":1,"path":"scripts/BBMOD_Camera/BBMOD_Camera.yy",},
     {"name":"ODirtEmitter","order":3,"path":"objects/ODirtEmitter/ODirtEmitter.yy",},
-    {"name":"oRenderer","order":1,"path":"objects/oRenderer/oRenderer.yy",},
     {"name":"BBMOD_MixQuaternionModule","order":5,"path":"scripts/BBMOD_MixQuaternionModule/BBMOD_MixQuaternionModule.yy",},
     {"name":"BBMOD_AABBCollider","order":2,"path":"scripts/BBMOD_AABBCollider/BBMOD_AABBCollider.yy",},
     {"name":"RmDemo","order":2,"path":"rooms/RmDemo/RmDemo.yy",},

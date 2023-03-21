@@ -18,12 +18,6 @@ if(!camera.Orthographic) {
 	}
 	camera.Direction = global.rot;
 }
-camera.update(delta_time);
-
-camera.apply(); 
-
-
-
 
 
 if((global.frame % 60) == 15) {

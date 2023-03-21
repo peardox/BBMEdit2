@@ -245,7 +245,6 @@
     {"id":{"name":"BBMOD_Camera","path":"scripts/BBMOD_Camera/BBMOD_Camera.yy",},},
     {"id":{"name":"BBMOD_DualQuaternion","path":"scripts/BBMOD_DualQuaternion/BBMOD_DualQuaternion.yy",},},
     {"id":{"name":"ODirtEmitter","path":"objects/ODirtEmitter/ODirtEmitter.yy",},},
-    {"id":{"name":"oRenderer","path":"objects/oRenderer/oRenderer.yy",},},
     {"id":{"name":"BBMOD_MixQuaternionModule","path":"scripts/BBMOD_MixQuaternionModule/BBMOD_MixQuaternionModule.yy",},},
     {"id":{"name":"__bbmod_ssao","path":"scripts/__bbmod_ssao/__bbmod_ssao.yy",},},
     {"id":{"name":"__bbmod_sky","path":"scripts/__bbmod_sky/__bbmod_sky.yy",},},
