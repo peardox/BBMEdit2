@@ -1,6 +1,7 @@
 global.screen_info = set_screen();
 
 camera = new BBMOD_BaseCamera();
+// camera = new BBMOD_Camera();
 camera.DirectionUpMax = 90;
 
 if(global.camera_ortho) {

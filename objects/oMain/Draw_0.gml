@@ -1,1 +1,1 @@
- model.draw(0, 0, 100);
+ model.draw(tx, ty, tz);

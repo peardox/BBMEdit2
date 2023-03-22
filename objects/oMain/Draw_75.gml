@@ -13,10 +13,36 @@ if(keyboard_check(vk_escape)) {
 	game_end();
 }
 
-if(keyboard_check(vk_left)) {
-	global.rot = wrap(--global.rot, 360);
+if(keyboard_check(vk_shift)) {
+	if(keyboard_check_pressed(vk_left)) {
+		tx = tx - 0.5;
+	}
+	if(keyboard_check_pressed(vk_right)) {
+		tx = tx + 0.5;
+	}
+
+	if(keyboard_check_pressed(vk_up)) {
+		ty = ty - 0.5;
+	}
+	if(keyboard_check_pressed(vk_down)) {
+		ty = ty + 0.5;
+	}
+
+	if(keyboard_check_pressed(vk_pageup)) {
+		tz = tz + 0.5;
+	}
+
+	if(keyboard_check_pressed(vk_pagedown)) {
+		tz = tz - 0.5;
+	}
 }
-if(keyboard_check(vk_right)) {
-	global.rot = wrap(++global.rot, 360);
+if(keyboard_check_pressed(vk_insert)) {
+	tx = 0;
+	ty = 0;
+	tz = 0;
 }
 
+
+if(keyboard_check_pressed(ord("R"))) {
+	global.dorot = !global.dorot;
+}

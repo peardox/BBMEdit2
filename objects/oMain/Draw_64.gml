@@ -82,3 +82,9 @@ ShowInt64Text("REAL SCREEN WIDTH : ", display_get_gui_width());
 ShowInt64Text("REAL SCREEN HEIGHT : ",display_get_gui_height());
 ShowText("");
 ShowText(_camtype);
+
+ShowStructText(new BBMOD_Vec3(tx, ty, tz));
+ShowText("Campos");
+ShowStructText(MakeCameraPositionVector());
+ShowFloatText("camVAngle", global.camVAngle, 5, 3);
+ShowFloatText("camHAngle", global.camHAngle, 5, 3);

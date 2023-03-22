@@ -3,12 +3,15 @@
 global.camera_ortho = true;
 global.have_camera = false;
 global.camdir = 0;
-global.camup = 0;
+global.camVAngle = 0;
+global.camHAngle = 0;
+global.camDistance = 1000;
+global.camup = -45;
 global.frame = 0
 global.rfps = 0;
 global.running = false;
 
-global.dorot = true;
+global.dorot = false;
 global.rotctr = 0;
 global.rotstep = 1;
 global.rotctr = 0;

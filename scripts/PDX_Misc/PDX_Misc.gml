@@ -49,22 +49,35 @@ function xsort_vec3(_s) {
 	}
 }
 
+function MakeCameraPositionVector() {
+	var _CamRad = 1000;
+
+	var _CamVec3 = new BBMOD_Vec3(_CamRad, 0, 0);
+	var _RotYZ = new BBMOD_Vec3(0, global.camVAngle, global.camHAngle);
+	var _MatR = new BBMOD_Matrix()
+		.RotateEuler(_RotYZ);
+	var _tv = matrix_transform_vertex(_MatR.Raw, _CamVec3.X, _CamVec3.Y, _CamVec3.Z);
+	return new BBMOD_Vec3(_tv[0], _tv[1], _tv[2]);	
+}
 
 function set_camera(_camera) {
-		if(_camera.Orthographic) {
+	if(_camera.Orthographic) {
 		_camera.Target = new BBMOD_Vec3(0, 0, 0);
-		_camera.Position = new BBMOD_Vec3(1000, 0, 0);
-		_camera.Width = window_get_width();
-		_camera.Height = window_get_height();
+		_camera.Position = MakeCameraPositionVector();
 
-		_camera.DirectionUp = global.camup;
+		_camera.Width = window_get_width() * (global.camDistance / 1000);
+		_camera.Height = window_get_height() * (global.camDistance / 1000);
+		_camera.DirectionUp = 0;
+		_camera.Direction = 0;
 		_camera.ZNear = -32768;
 		_camera.ZFar = 32768;
 	} else {	
+//		_camera.destroy();
+//		_camera = new BBMOD_BaseCamera();
 		_camera.Target = new BBMOD_Vec3(0, 0, 0);
-		_camera.Position = new BBMOD_Vec3(1000, 0, 1000);
-
-		_camera.DirectionUp = global.camup;
+//		_camera.Position = new BBMOD_Vec3(1000, 0, 1000);
+		_camera.Position = MakeCameraPositionVector();
+		_camera.Direction = global.camup;
 		_camera.ZNear = 0.1;
 		_camera.ZFar = 32768;
 		_camera.Fov = 60;
