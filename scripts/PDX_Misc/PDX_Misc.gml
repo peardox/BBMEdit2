@@ -60,13 +60,29 @@ function MakeCameraPositionVector() {
 	return new BBMOD_Vec3(_tv[0], _tv[1], _tv[2]);	
 }
 
+function canvas_get_width() {
+	if(OSINFO.ostype == os_gxgames) {
+		return browser_width;
+	} else {
+		return window_get_width();
+	}
+}
+
+function canvas_get_height() {
+	if(OSINFO.ostype == os_gxgames) {
+		return browser_height;
+	} else {
+		return window_get_height();
+	}
+}
+
 function set_camera(_camera) {
 	if(_camera.Orthographic) {
 		_camera.Target = new BBMOD_Vec3(0, 0, 0);
 		_camera.Position = MakeCameraPositionVector();
 
-		_camera.Width = window_get_width() * (global.camDistance / 1000);
-		_camera.Height = window_get_height() * (global.camDistance / 1000);
+		_camera.Width = canvas_get_width() * (global.camDistance / 1000);
+		_camera.Height = canvas_get_height() * (global.camDistance / 1000);
 		_camera.DirectionUp = 0;
 		_camera.Direction = 0;
 		_camera.ZNear = -32768;
@@ -111,15 +127,25 @@ function make_sprite(sfile) {
 	return sprite_create_from_surface(_surf, 0, 0, _required_width, _required_height, false, false, 0, 0);
 }	
 
-function set_screen(fnt = undefined, font_size = 24) {
+function set_screen(req_fs = false, fnt = undefined, font_size = 24) {
 	var design_width = 1280;
 	var design_height = 800;
 	var design_aspect = design_width / design_height;
 	var design_min_axis = min(design_width, design_height);
 
-	var display_width = display_get_width();
-	var display_height = display_get_height();
+	var display_width = canvas_get_width();
+	var display_height = canvas_get_height();
+	if(display_width < global.min_width) {
+		if(!req_fs) {
+			display_width = global.min_width;
+		}
+	}
+	if(display_height < global.min_height) {
+		if(!req_fs) {
+			display_height = global.min_height;
+		}
 	var display_aspect = display_width / display_height;
+	}
 	var display_min_axis = min(display_width, display_height);
 
 	var game_scale = 1;
@@ -141,7 +167,10 @@ function set_screen(fnt = undefined, font_size = 24) {
 
 	display_set_gui_size(game_width, game_height);
 
-
+	if(!req_fs) {
+		window_set_position(floor((display_get_width() - game_width) / 2),
+							floor((display_get_height() - game_height) / 2));
+	}
 	var cam = camera_create();
 	var viewmat = matrix_build_lookat(game_width / 2, game_height / 2, -10, game_width / 2, game_height / 2, 0, 0, 1, 0);
 	var projmat = matrix_build_projection_ortho(game_width, game_height, 1.0, 32000.0);
@@ -164,14 +193,14 @@ function set_screen(fnt = undefined, font_size = 24) {
 		var _line_height = _size;
 	}
 
-	window_set_fullscreen(true);
+	window_set_fullscreen(req_fs);
 	
 	var _scr = {
 		dpi_x: display_get_dpi_x(),
 		dpi_y: display_get_dpi_y(),
-		display_width: display_width,
-		display_height: display_height,
-		display_aspect: display_aspect,
+		display_width: display_get_width(),
+		display_height: display_get_height(),
+		display_aspect: display_get_width() / display_get_height(),
 		game_width: game_width,
 		game_height: game_height,
 		game_scale: game_scale,
@@ -248,7 +277,8 @@ function SelectConfigPath() {
 			 have_steam: false,
 			 steam_active: false,
 			 userdata: "",
-			shortcuts: false,
+			 shortcuts: false,
+			 ostype: os_type,
 			 steam: {
 				app_id: 0,
 				account_id: 0,
@@ -351,4 +381,5 @@ function setRotationBase(v) {
 }
 
 global.is_game_restarting = false;
-global.info = SelectConfigPath();
+#macro OSINFO global.info
+OSINFO = SelectConfigPath();

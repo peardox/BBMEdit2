@@ -280,12 +280,12 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 	
 	static drawAxes = function(_colour = c_grey) {
 		var _scr =  oCamera.camera.world_to_screen(new BBMOD_Vec3(0,0,0));
-		var _x = window_get_x();
-		var _y = window_get_y();
+		var _x = 0; // canvas_get_width() / 2;
+		var _y = 0; // canvas_get_height() / 2;
 		
 		draw_set_color(_colour);
-		draw_line(_x, _scr.Y, _x + window_get_width(), _scr.Y);
-		draw_line(_scr.X, _y, _scr.X, _y + window_get_height());
+		draw_line(_x, _scr.Y, _x + canvas_get_width(), _scr.Y);
+		draw_line(_scr.X, _y, _scr.X, _y + canvas_get_height());
 		
 	}
 

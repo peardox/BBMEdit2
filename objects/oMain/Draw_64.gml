@@ -75,8 +75,8 @@ ShowInt64Text("SCREEN WIDTH : ", global.screen_info.game_width);
 ShowInt64Text("SCREEN HEIGHT : ", global.screen_info.game_height);
 ShowInt64Text("SCREEN SCALE : ", global.screen_info.game_scale);
 ShowText("");
-ShowInt64Text("REAL DISPLAY WIDTH : ", window_get_width());
-ShowInt64Text("REAL DISPLAY HEIGHT : ", window_get_height());
+ShowInt64Text("REAL DISPLAY WIDTH : ", canvas_get_width());
+ShowInt64Text("REAL DISPLAY HEIGHT : ", canvas_get_height());
 
 ShowInt64Text("REAL SCREEN WIDTH : ", display_get_gui_width());
 ShowInt64Text("REAL SCREEN HEIGHT : ",display_get_gui_height());
@@ -88,3 +88,9 @@ ShowText("Campos");
 ShowStructText(MakeCameraPositionVector());
 ShowFloatText("camVAngle", global.camVAngle, 5, 3);
 ShowFloatText("camHAngle", global.camHAngle, 5, 3);
+
+// draw_set_halign(fa_right);
+global.cursor_y = 160;
+global.cursor_x = canvas_get_width() - 560;
+ShowStructText(OSINFO);
+// draw_set_halign(fa_left);

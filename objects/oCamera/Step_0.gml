@@ -3,7 +3,7 @@
 
 // Do not forget to call the camera's update method
 // camera.Direction = global.camdir;
-if(keyboard_check_pressed(vk_f3)) {
+if(keyboard_check_pressed(ord("C"))) {
 	camera.Orthographic = !camera.Orthographic;
 	set_camera(camera); 
 }

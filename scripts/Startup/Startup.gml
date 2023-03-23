@@ -17,6 +17,10 @@ global.rotstep = 1;
 global.rotctr = 0;
 global.size = 512;
 global.rot = 0;
+global.fullscreen = false;
+global.min_width = 1280;
+global.min_height = 720;
+
 
 global.camera_distance = 0;
 
