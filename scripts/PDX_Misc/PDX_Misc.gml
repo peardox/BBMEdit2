@@ -132,7 +132,9 @@ function set_screen(req_fs = false, fnt = undefined, font_size = 24) {
 	var design_height = 800;
 	var design_aspect = design_width / design_height;
 	var design_min_axis = min(design_width, design_height);
-
+	if(window_get_fullscreen()) {
+		req_fs = true;
+	}
 	var display_width = canvas_get_width();
 	var display_height = canvas_get_height();
 	if(display_width < global.min_width) {
@@ -161,8 +163,10 @@ function set_screen(req_fs = false, fnt = undefined, font_size = 24) {
 	room_width = game_width;
 	room_height = game_height;
 	
-	window_set_size(game_width, game_height);
-
+	if(!req_fs) {
+		window_set_size(game_width, game_height);
+	}
+	
 	surface_resize(application_surface, game_width, game_height);
 
 	display_set_gui_size(game_width, game_height);

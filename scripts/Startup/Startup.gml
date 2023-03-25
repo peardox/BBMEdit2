@@ -3,13 +3,23 @@
 global.camera_ortho = true;
 global.have_camera = false;
 global.camdir = 0;
-global.camVAngle = 0;
-global.camHAngle = 0;
+global.camVAngle = 22.50;
+global.camHAngle = 337.50;
 global.camDistance = 1000;
 global.camup = -45;
 global.frame = 0
 global.rfps = 0;
 global.running = false;
+
+global.rax = 0;
+global.ray = 0;
+global.raz = 0;
+
+global.display_model = true;
+global.display_info = true;
+global.display_bb = true;
+global.display_br = false;
+global.display_axis = true;
 
 global.dorot = false;
 global.rotctr = 0;

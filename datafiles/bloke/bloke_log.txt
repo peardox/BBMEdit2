@@ -1,0 +1,82 @@
+Nodes:
+======
+35: Armature
+    36: characterMedium:
+        * Mesh 0 [V,N,UV,T,B,]
+
+    37: LeftFootCtrl
+        0: LeftHeelRoll [bone]
+            1: LeftToeRoll [bone]
+                2: LeftFootIK [bone]
+                    38: LeftFootIK_end
+                        39: LeftFootIK_end_end
+        40: LeftFootRollCtrl
+            41: LeftFootRollCtrl_end
+                42: LeftFootRollCtrl_end_end
+        43: LeftKneeCtrl
+            44: LeftKneeCtrl_end
+                45: LeftKneeCtrl_end_end
+    46: RightFootCtrl
+        47: RightHeelRoll
+            48: RightToeRoll
+                49: RightFootIK
+                    50: RightFootIK_end
+                        51: RightFootIK_end_end
+        52: RightFootRollCtrl
+            53: RightFootRollCtrl_end
+                54: RightFootRollCtrl_end_end
+        55: RightKneeCtrl
+            56: RightKneeCtrl_end
+                57: RightKneeCtrl_end_end
+    58: HipsCtrl
+        3: Hips [bone]
+            4: Spine [bone]
+                5: Chest [bone]
+                    6: UpperChest [bone]
+                        7: Neck [bone]
+                            8: Head [bone]
+                                59: Head_end
+                                    60: Head_end_end
+                        9: LeftShoulder [bone]
+                            10: LeftArm [bone]
+                                11: LeftForeArm [bone]
+                                    12: LeftHand [bone]
+                                        13: LeftHandIndex1 [bone]
+                                            14: LeftHandIndex2 [bone]
+                                                15: LeftHandIndex3 [bone]
+                                                    61: LeftHandIndex3_end
+                                                        62: LeftHandIndex3_end_end
+                                        16: LeftHandThumb1 [bone]
+                                            17: LeftHandThumb2 [bone]
+                                                63: LeftHandThumb2_end
+                                                    64: LeftHandThumb2_end_end
+                        18: RightShoulder [bone]
+                            19: RightArm [bone]
+                                20: RightForeArm [bone]
+                                    21: RightHand [bone]
+                                        22: RightHandIndex1 [bone]
+                                            23: RightHandIndex2 [bone]
+                                                24: RightHandIndex3 [bone]
+                                                    65: RightHandIndex3_end
+                                                        66: RightHandIndex3_end_end
+                                        25: RightHandThumb1 [bone]
+                                            26: RightHandThumb2 [bone]
+                                                67: RightHandThumb2_end
+                                                    68: RightHandThumb2_end_end
+            27: LeftUpLeg [bone]
+                28: LeftLeg [bone]
+                    29: LeftFoot [bone]
+                        30: LeftToes [bone]
+                            69: LeftToes_end
+                                70: LeftToes_end_end
+            31: RightUpLeg [bone]
+                32: RightLeg [bone]
+                    33: RightFoot [bone]
+                        34: RightToes [bone]
+                            71: RightToes_end
+                                72: RightToes_end_end
+
+Materials:
+==========
+0: skin
+

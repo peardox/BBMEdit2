@@ -36,27 +36,36 @@ function ShowStructText(structvar, _depth = 0, colour = c_white) {
 			throw("Possible Runaway Recursion");
 		}
 
-        var keys = variable_struct_get_names(structvar);
-        for (var i = array_length(keys)-1; i >= 0; --i) {
-            var k = keys[i];
-            var v = structvar[$ k];
-            /* Use k and v here */
-                if(is_string(v)) {
-                        ShowText(k + " : " + v, _depth);
-                } else if(is_bool(v)) {
-                        ShowBoolText(k + " : ", v, _depth);
-                } else if(is_real(v)) {
-                        ShowFloatText(k + " : ", v, 5, 3, _depth);
-                } else if(is_int64(v)) {
-                        ShowInt64Text(k + " : ", v, _depth);
-				} else if(is_instanceof(v, BBMOD_Vec3)) {
-						ShowText(k + " : { X: " + string(v.X) + ", Y: " + string(v.Y) + ", Z: " + string(v.Z) + " }", _depth);
-                } else if(is_struct(v)) {
-						ShowText(k + " : ", _depth);
-                        ShowStructText(v, _depth + 1);
-                } else {
-                        ShowText(k + " : Unknown", _depth);
-                }
-        }
+		if(is_instanceof(structvar, BBMOD_Vec3)) {
+			ShowText(" : { X: " + string_format(structvar.X, 4, 6) + 
+						", Y: " + string_format(structvar.Y, 4, 6) + 
+						", Z: " + string_format(structvar.Z, 4, 6) + " }", _depth);
+		} else {
+			var keys = variable_struct_get_names(structvar);
+			for (var i = array_length(keys)-1; i >= 0; --i) {
+	            var k = keys[i];
+	            var v = structvar[$ k];
+	            /* Use k and v here */
+	            if(is_string(v)) {
+	                ShowText(k + " : " + v, _depth);
+	            } else if(is_bool(v)) {
+	                ShowBoolText(k + " : ", v, _depth);
+	            } else if(is_real(v)) {
+	                ShowFloatText(k + " : ", v, 5, 3, _depth);
+	            } else if(is_int64(v)) {
+	                ShowInt64Text(k + " : ", v, _depth);
+	            } else if(is_struct(v)) {
+					ShowText(k + "{} : ", _depth);
+	                ShowStructText(v, _depth + 1);
+	            } else if(is_array(v)) {
+					ShowText(k + "[] : ", _depth);
+					for(var _i = 0; _i < array_length(v); _i++) {
+						ShowStructText(v[_i], _depth + 1);
+					}
+	            } else {
+					ShowText(k + " : Unknown", _depth);
+	            }
+	        }
+		}
         
 }

@@ -14,20 +14,21 @@ tz = 0;
 //	model = new PDX_Model("licensed/cat/Cat_Chubby.bbmod", true, false, 180, 270, 90);
 //	animIdx = 5;
 //	model = new PDX_Model("Boy/Boy.bbmod", true, false, 0, 0, 90);
-//	animIdx = 12;
+//	animIdx = 7;
+//	model = new PDX_Model("bloke/bloke.bbmod", true, false, 270, 0, 90);
+//	animIdx = 6;
+model = new PDX_Model("licensed/Zerin/RetroMedievalKit/wall_detail.bbmod", false, true);
 //	model.Gimbal.Rotation.Y = 180;
 //	model = new PDX_Model("cube/hexa123-in-air.bbmod");
-//	model = new PDX_Model("cube/hexa123-in-air.bbmod", false, false, 270, 270, 0);
+//	model = new PDX_Model("cube/hexa123-in-air.bbmod", false, false, 270, 270, 180);
 
 //  model = new PDX_Model("cube/hexa123-ground.bbmod", false, false, 270, 270, 0);
 //	model = new PDX_Model("cube/hexa123.bbmod", false, false, 270, 180, 0);
 //	model = new PDX_Model("cube/cube-z-x-view.bbmod", false, false, 270, 180, 0);
 //	model = new PDX_Model("cube/defcube.bbmod", false, false, 0, 0, 0);
 //	model = new PDX_Model("cube/cube.bbmod", false, false, 270, 270, 0);
-	// model.Gimbal.Rotation.Y = 90;
 
-
-// animationPlayer = new BBMOD_AnimationPlayer(model);
+// bbox = new PDX_Model("bbox.bbmod");
 if(is_undefined(model)) {
 	model = new PDX_Model("cube/castle.bbmod");
 }
