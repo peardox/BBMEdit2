@@ -10,13 +10,13 @@ global.resources = {
 	Sprites: []
 };
 
-function PDX_AABB(model = undefined, extbbox = undefined) constructor {
+function PDX_AABB(model = undefined) constructor {
 	Min = undefined;
 	Max = undefined;
 	Size = undefined;
 	Pivot = undefined;
 
-	static Reset = function(model, extbbox = undefined) {
+	static Reset = function(model) {
 		if(is_instanceof(model, BBMOD_Model)) {
 			var _meshcnt = array_length(model.Meshes);
 			if(_meshcnt > 0) {
@@ -40,16 +40,7 @@ function PDX_AABB(model = undefined, extbbox = undefined) constructor {
 						}
 
 					} else {
-						if(is_struct(extbbox)) {
-							if(variable_struct_exists(extbbox, "Size")) {
-								Min = new BBMOD_Vec3(0, 0, 0);
-								Max = new BBMOD_Vec3(extbbox.Size.X, extbbox.Size.Y, extbbox.Size.Z);
-							} else {
-								throw("Malformed External Bounding Box");
-							}
-						} else {
-							throw("No Bounding Box");
-						}
+						throw("No Bounding Box");
 					}
 			Size = new BBMOD_Vec3(	Max.X - Min.X, 
 									Max.Y - Min.Y,
@@ -62,19 +53,14 @@ function PDX_AABB(model = undefined, extbbox = undefined) constructor {
 			}			
 		}
 	}	
-/*
-	var _a = debug_get_callstack(4);
-	show_debug_message("In PXD_AABB - model = " +
-			". extbbox = " + string(extbbox) +
-			", Stack ...`n" + string(_a));
-*/
+
 	if(is_instanceof(model, BBMOD_Model)) {
-		Reset(model, extbbox);
+		Reset(model);
 	}
 
 }
 
-function PDX_BoundingBox(model = undefined, extbbox = undefined) : PDX_AABB(model, extbbox) constructor {
+function PDX_BoundingBox(model = undefined) : PDX_AABB(model) constructor {
 	Translation = undefined;
 	AxisRotation = undefined;
 	Original = undefined;
@@ -90,13 +76,13 @@ function PDX_BoundingBox(model = undefined, extbbox = undefined) : PDX_AABB(mode
 		return _rbb;
 	}
 
-	static Initialise = function(model, extbbox) {
+	static Initialise = function(model) {
 		if(is_instanceof(model, BBMOD_Model)) {
 			if(is_undefined(Min)) {
 				throw("Illegal model - no Bounding Box");
 			} else {
 				AxisRotation = new BBMOD_Vec3(0);
-				Original = new PDX_AABB(model, extbbox);
+				Original = new PDX_AABB(model);
 				Translation = RotBBox(Pivot, new BBMOD_Vec3(0));
 			}
 		}
@@ -141,12 +127,12 @@ function PDX_BoundingBox(model = undefined, extbbox = undefined) : PDX_AABB(mode
 	}
 
 	if(is_instanceof(model, BBMOD_Model)) {
-		Initialise(model, extbbox);
+		Initialise(model);
 	}
 
 }
 
-function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0, roty = 0, rotz = 0, unitscale = 1, extbbox = undefined, _sha1=undefined) : BBMOD_Model(_file, _sha1) constructor {
+function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0, roty = 0, rotz = 0, unitscale = 1, _sha1=undefined) : BBMOD_Model(_file, _sha1) constructor {
 	BBox = undefined;
 	Ground = undefined;
 	mscale = undefined;
@@ -167,7 +153,7 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 		z = 0;
 		mscale = global.size; // sbdbg - Placeholder
 		mname = __strip_ext(_file);
-		BBox = new PDX_BoundingBox(self, extbbox);
+		BBox = new PDX_BoundingBox(self);
 		BBox.Reorient(new BBMOD_Vec3(rotx, roty, rotz));
 		BBox.Normalize(unitscale);
 		if(!is_undefined(BBox)) {
