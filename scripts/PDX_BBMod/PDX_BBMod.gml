@@ -481,7 +481,7 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 				global.resources.Materials[matcnt].Repeat = trepeat;
 				return matcnt;
 			} else {
-				throw("Sprite missing " +  matimg);
+				show_debug_message("Sprite missing " +  matimg);
 			}
 		} else {
 			var already_missed = false;
@@ -542,6 +542,29 @@ function load_models_from(dir, trepeat = false) {
 	return _i + _cnt;
 }
 
+function scan_subdirs(dir) {
+	// Remove trailing slashes
+	while(string_char_at(dir, string_length(dir)) == "\\") {
+		dir = string_delete(dir, string_length(dir), 1);
+	}
+	
+	var _dirs = array_create(100, "");
+	var _cnt = 0;
+	var _fmask = dir + "\\*.*";
+	
+	var _bfile = file_find_first(_fmask, fa_directory); 
+	
+	while (_bfile != "") {
+		_dirs[_cnt++] = dir + "\\" + _bfile;
+		_bfile = file_find_next();
+	}
+	
+	array_resize(_dirs, _cnt);
+
+	file_find_close();
+
+	return _dirs;
+}
 /*
 	global.resources.Sprites[0] = skin;	
 	global.resources.Materials[0] = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone();

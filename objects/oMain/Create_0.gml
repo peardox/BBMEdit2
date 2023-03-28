@@ -8,7 +8,22 @@ global.zzautofile = get_autofile();
 if(global.zzautofile != "") {
 	var sp = filename_path(global.zzautofile);
 	modelCount = load_models_from(sp);
-//	modelCount = load_models_from("E:\\Dungeon\\");
+} else {
+	var _wd = "";
+	if(os_type != os_gxgames) {
+		_wd = working_directory;
+	}
+	var _ld = scan_subdirs(_wd + "licensed");
+	if(array_length(_ld) > 0) {
+		for(var _i = 0; _i < array_length(_ld); _i++) {
+			var _ld2 = scan_subdirs(_ld[_i]);
+			if(array_length(_ld2) > 0) {
+				for(var _j = 0; _j < array_length(_ld2); _j++) {
+					modelCount = load_models_from(_ld2[_j]);
+				}
+			}
+		}
+	}
 }
 model = undefined;	
 

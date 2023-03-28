@@ -31,6 +31,9 @@ if(is_array(global.p_string)) {
 	ShowText("Args : ");
 	for(var i =0; i<array_length(global.p_string); i++) {
 		ShowText("-" + string(global.p_string[i]) + "-");
+		if( i > 9) {
+			break;
+		}
 	}
 }
 ShowText("Path = " + filename_path(global.zzautofile) + ", Models = " + string(modelCount) + ", Name = " + model.mname);
@@ -39,7 +42,7 @@ if(file_exists(global.zzautofile)) {
 } else {
 	ShowText("Autofile missing !" + global.zzautofile + "!");
 }
-ShowText("Files : " + global.debug);
+// ShowText("Files : " + global.debug);
 
 if(global.display_info) {
 
