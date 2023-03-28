@@ -16,7 +16,7 @@ global.ray = 0;
 global.raz = 0;
 
 global.display_model = true;
-global.display_info = true;
+global.display_info = false;
 global.display_bb = true;
 global.display_br = false;
 global.display_axis = true;
@@ -37,3 +37,44 @@ global.camera_distance = 0;
 global.use_peardox = true;
 
 camera_destroy(camera_get_default());
+
+global.resources = {
+    Animations: [], // <- Add Animations struct here
+    Materials: [],
+    Missing: [],
+    Models: [],
+    Files: [],
+	Sprites: []
+};
+
+global.p_string = [];
+global.zzautofile = "";
+global.autoindex = -1;
+global.debug = "";
+
+function get_autofile() {
+	var p_num = parameter_count();
+	var _ret = "";
+	
+	var _fn = "";
+	if(p_num > 0) {
+		if(p_num == 2) {
+			if(os_type == os_windows) {
+				_fn = parameter_string(1);
+			} else {
+				_fn = parameter_string(1);
+			}
+			var _ext = string_lower(filename_ext(_fn));
+			if((_ext == ".bbmod")) {
+				_ret = _fn;
+			}
+		}
+	}
+	return _ret;
+}
+/*
+var _s = "E:\\Dungeon\\*.bbmod";
+my_function = external_define("PdxFindFile.dll", "pdx_find_first", dll_stdcall, ty_string, 2, ty_string, ty_real);
+global.debug = external_call(my_function, _s, fa_none) + "\n";
+external_free("PdxFindFile.dll");
+*/

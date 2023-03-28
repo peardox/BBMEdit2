@@ -8,7 +8,9 @@ if(global.display_br) {
 	var _br = model.DrawBoundingRect();
 }
 
-if(global.display_info) {
+global.cursor_y = 64;
+global.cursor_x = 8;
+
 	draw_set_color(c_white);
 
 	if(OSINFO.ostype <> os_gxgames) {
@@ -24,7 +26,22 @@ if(global.display_info) {
 					 ", Rot = " + string(global.rot) +
 					 ", Cam = " + string(oCam.camera.Position)
 					 );	
+					 
+if(is_array(global.p_string)) {
+	ShowText("Args : ");
+	for(var i =0; i<array_length(global.p_string); i++) {
+		ShowText("-" + string(global.p_string[i]) + "-");
+	}
+}
+ShowText("Path = " + filename_path(global.zzautofile) + ", Models = " + string(modelCount) + ", Name = " + model.mname);
+if(file_exists(global.zzautofile)) {
+	ShowText("Autofile exists");
+} else {
+	ShowText("Autofile missing !" + global.zzautofile + "!");
+}
+ShowText("Files : " + global.debug);
 
+if(global.display_info) {
 
 	if(array_length(global.resources.Missing) > 0) {
 		draw_text(8, 64, "Missing image textures (" + string(array_length(global.resources.Missing)) + ")");
@@ -32,9 +49,6 @@ if(global.display_info) {
 			draw_text(8, 80 + (i * 16), global.resources.Missing[i]);
 		}
 	} else {
-		global.cursor_y = 64;
-		global.cursor_x = 0;
-
 		ShowText("Model");
 		ShowStructText(model.BBox);
 		ShowText("");
@@ -57,3 +71,5 @@ if(global.display_info) {
 	//	ShowText("World : " + string(_wm));
 	}
 }
+
+

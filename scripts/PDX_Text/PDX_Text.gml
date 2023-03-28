@@ -22,12 +22,19 @@ function ShowBoolText(txt, boolval, _depth = 0, colour = c_white) {
 }
 
 function ShowText(txt, _depth = 0, colour = c_white) {
-        draw_set_color(colour);
-        if(string_length(txt) > 80) {
-                txt = string_copy(str_repeat("    ", _depth) + txt, 1, 80) + "...";
-        }
-        draw_text(global.cursor_x, global.cursor_y, str_repeat("    ", _depth) + txt);
-        global.cursor_y += global.screen_info.line_height;
+	draw_set_color(colour);
+/*
+	if(string_length(txt) > 80) {
+            txt = string_copy(str_repeat("    ", _depth) + txt, 1, 80) + "...";
+    }
+	if(_depth > 0) {
+	    draw_text(global.cursor_x, global.cursor_y, str_repeat("    ", _depth) + txt);
+	} else {
+	    draw_text(global.cursor_x, global.cursor_y, txt);
+	}
+*/
+	draw_text(global.cursor_x, global.cursor_y, txt);
+    global.cursor_y += global.screen_info.line_height;
         
 }
 

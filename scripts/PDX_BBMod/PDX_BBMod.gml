@@ -1,15 +1,6 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
-global.resources = {
-    Animations: [], // <- Add Animations struct here
-    Materials: [],
-    Missing: [],
-    Models: [],
-    Tiles: [],
-	Sprites: []
-};
-
 function PDX_AABB(model = undefined) constructor {
 	Min = undefined;
 	Max = undefined;
@@ -151,8 +142,13 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 		x = 0;
 		y = 0; 
 		z = 0;
+		if(file_exists(_file)) {
+			show_debug_message(_file + " exists");
+		} else {
+			show_debug_message(_file + " missing");
+		}
 		mscale = global.size; // sbdbg - Placeholder
-		mname = __strip_ext(_file);
+		mname = strip_ext(_file);
 		BBox = new PDX_BoundingBox(self);
 		BBox.Reorient(new BBMOD_Vec3(rotx, roty, rotz));
 		BBox.Normalize(unitscale);
@@ -395,15 +391,6 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 		return _clone;
 	};
 
-	static __strip_ext = function(_fname, include_dir = false) {
-		if(include_dir) {
-			var _v = _fname;
-		} else {
-			var _v = filename_name(_fname);
-		}
-		return string_copy(_v, 1, string_length(_v) - string_length(filename_ext(_v)));
-	}
-
 	static _load_animations = function(dir) {
 		var _cnt = array_length(global.resources.Animations);
 		var _i = 0;
@@ -452,7 +439,7 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 	static _get_materials = function(matfile, trepeat = false, animated = false) {
 		var matimg = false;
 		
-		matfile = __strip_ext(matfile, true);
+		matfile = strip_ext(matfile, true);
 	
 		if(file_exists(matfile + ".png")) {
 			matimg = matfile + ".png";
@@ -513,6 +500,48 @@ function PDX_Model(_file=undefined, animated = false, trepeat = false, rotx = 0,
 	}
 
 }
+
+function strip_ext(_fname, include_dir = false) {
+	if(include_dir) {
+		var _v = _fname;
+	} else {
+		var _v = filename_name(_fname);
+	}
+	return string_copy(_v, 1, string_length(_v) - string_length(filename_ext(_v)));
+}
+
+
+function load_models_from(dir, trepeat = false) {
+	// Remove trailing slashes
+	while(string_char_at(dir, string_length(dir)) == "\\") {
+		dir = string_delete(dir, string_length(dir), 1);
+	}
+	
+	var _i = array_length(global.resources.Models);
+	array_resize(global.resources.Models, _i + 1000);
+	var _cnt = 0;
+	var _fmask = dir + "\\*.bbmod";
+	
+	var _bfile = file_find_first(_fmask, fa_none); 
+	global.debug += _fmask + "\n";
+	
+	while (_bfile != "") {
+		if(global.zzautofile == dir + "\\" + _bfile) {
+			global.autoindex = _i;
+		}
+		global.resources.Models[_i + _cnt] = new PDX_Model(dir + "\\" + _bfile, trepeat);
+		global.debug += _bfile + "\n";
+		_bfile = file_find_next();
+		_cnt++;
+	}
+	
+	array_resize(global.resources.Models, _i + _cnt);
+
+	file_find_close();
+
+	return _i + _cnt;
+}
+
 /*
 	global.resources.Sprites[0] = skin;	
 	global.resources.Materials[0] = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone();

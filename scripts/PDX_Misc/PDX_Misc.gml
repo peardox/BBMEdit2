@@ -1,6 +1,142 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
+function get_hypotenuse(_p1, _p2, _p3) {
+	var _width = (_p3.X - _p1.X);
+	var _height = (_p1.Y - _p2.Y);
+	
+	return { hypot: sqrt((_width * _width) + (_height * _height)), width: _width, height: _height };
+}
+
+function make_reference_plane(_trial_width = 1, _theta = undefined) {
+	if(is_undefined(_theta)) {
+		_theta = global.rot;
+	}
+	
+	var _p = array_create(4);
+	_p[0] = new BBMOD_Vec3(-0.5, -0.5, 0);
+	_p[1] = new BBMOD_Vec3( 0.5, -0.5, 0);
+	_p[2] = new BBMOD_Vec3( 0.5,  0.5, 0);
+	_p[3] = new BBMOD_Vec3(-0.5,  0.5, 0);
+
+	var _s = array_create(4);
+	_s[0] = toscr(_p[0], _trial_width, _theta);
+	_s[1] = toscr(_p[1], _trial_width, _theta);
+	_s[2] = toscr(_p[2], _trial_width, _theta);
+	_s[3] = toscr(_p[3], _trial_width, _theta);
+
+	var _rv = undefined;
+
+	var _leastxval = infinity;
+	var _leastyval = infinity;
+	var _leastxidx = 0;
+	var _leastyidx = 0;
+	var _leastxcnt = 0;
+	var _leastycnt = 0;
+	var _mostxval = -infinity;
+	var _mostyval = -infinity;
+	var _mostxidx = 0;
+	var _mostyidx = 0;
+	var _mostxcnt = 0;
+	var _mostycnt = 0;
+	
+	for(var _x = 0; _x < 4; _x++) {
+		if(_s[_x].X < _leastxval) {
+			_leastxcnt = 0;
+			_leastxval = _s[_x].X;
+		}
+		if(_s[_x].X == _leastxval) {
+			_leastxidx = _x;
+			_leastxcnt++;
+		}
+	}
+
+	for(var _y = 0; _y < 4; _y++) {
+		if(_s[_y].Y < _leastyval) {
+			_leastycnt = 0;
+			_leastyval = _s[_y].Y;
+		}
+		if(_s[_y].Y == _leastyval) {
+			_leastyidx = _y;
+			_leastycnt++;
+		}
+	}
+
+	for(var _x = 3; _x >= 0; _x--) {
+		if(_s[_x].X > _mostxval) {
+			_mostxcnt = 0;
+			_mostxval = _s[_x].X;
+		}
+		if(_s[_x].X == _mostxval) {
+			_mostxidx = _x;
+			_mostxcnt++;
+		}
+	}
+
+	for(var _y = 3; _y >= 0; _y--) {
+		if(_s[_y].Y > _mostyval) {
+			_mostycnt = 0;
+			_mostyval = _s[_y].Y;
+		}
+		if(_s[_y].Y == _mostyval) {
+			_mostyidx = _y;
+			_mostycnt++;
+		}
+	}
+
+	var _width = abs(_mostxval - _leastxval);
+	var _height = abs(_mostyval - _leastyval);
+	if((_leastxcnt == 1) && (_leastycnt == 1)) { // Normal Plane on angle
+		// Get bottom left co-ordinates from leftmost and bottommost co-ordinates
+		var _bottom_left = { X: _s[_leastxidx].X, Y: _s[_mostyidx].Y };
+		
+		// Calc the resulting triangle
+		// Hypotenuse not definitely needed but may prove useful for adjusting the scale of the base plane of AABB
+		var _ref_tri = get_hypotenuse(_bottom_left, _s[_leastxidx], _s[_mostyidx]);
+		
+		var _prop_width = abs(_ref_tri.width / _width); // Proportional width of Reference Triangle
+		var _prop_height = abs(_ref_tri.height / _height); // Proportional width of Reference Triangle
+		if(_width == 0) { // Don't Div Zero
+			_width = 0.0001;
+		}
+		
+		_rv = { width: _width,
+			   height: _height,
+			   scale: _trial_width * (_trial_width / (_width)),
+			   pwidth: _prop_width,
+			   pheight: _prop_height,
+			   reftri: _ref_tri,
+			 }
+			
+	} else if((_leastxcnt == 2) && (_leastycnt == 2)) { // Flat Plane
+		_rv = { width: _width,
+				height: _height,
+				scale: _trial_width * (_trial_width / (_width)),
+				pwidth: 1,
+				pheight: _height / _width,
+				reftri: undefined
+				} 
+	} else if((_leastxcnt == 4) || (_leastycnt == 4)) { // Zero width / height Plane
+		_rv = { width: _width,
+				height: _height,
+				scale: _trial_width * (_trial_width / (_width)),
+				pwidth: 1,
+				pheight: _height / _width,
+				reftri: undefined
+				} 
+	} else {
+		throw("Wierd angles - unhandled - " + string(_leastxcnt) + 
+			", " + string(_leastycnt) +
+			", " + string(_leastxval) + 
+			", " + string(_mostxval) + 
+			", " + string(_leastyval) + 
+			", " + string(_mostyval) 
+		);
+	}
+
+	return _rv;
+}
+
 function get_sprite_assets() {
     var surf,no,i,ds_map;
     ds_map = argument0;
