@@ -34,17 +34,16 @@ function ShowText(txt, _depth = 0, colour = c_white) {
 	}
 */
 	draw_text(global.cursor_x, global.cursor_y, txt);
-    global.cursor_y += global.screen_info.line_height;
-        
+	global.cursor_y += global.screen_info.line_height;
 }
 
-function ShowStructText(structvar, _depth = 0, colour = c_white) {
+function ShowStructText(title, structvar, _depth = 0, colour = c_white) {
 		if(_depth > 10) {
 			throw("Possible Runaway Recursion");
 		}
-
+		
 		if(is_instanceof(structvar, BBMOD_Vec3)) {
-			ShowText(" : { X: " + string_format(structvar.X, 4, 6) + 
+			ShowText(title + " { X: " + string_format(structvar.X, 4, 6) + 
 						", Y: " + string_format(structvar.Y, 4, 6) + 
 						", Z: " + string_format(structvar.Z, 4, 6) + " }", _depth);
 		} else {
@@ -63,11 +62,11 @@ function ShowStructText(structvar, _depth = 0, colour = c_white) {
 	                ShowInt64Text(k + " : ", v, _depth);
 	            } else if(is_struct(v)) {
 					ShowText(k + "{} : ", _depth);
-	                ShowStructText(v, _depth + 1);
+	                ShowStructText(k, v, _depth + 1);
 	            } else if(is_array(v)) {
 					ShowText(k + "[] : ", _depth);
 					for(var _i = 0; _i < array_length(v); _i++) {
-						ShowStructText(v[_i], _depth + 1);
+						ShowStructText(k, v[_i], _depth + 1);
 					}
 	            } else {
 					ShowText(k + " : Unknown", _depth);

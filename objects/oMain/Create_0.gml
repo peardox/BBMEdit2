@@ -1,73 +1,73 @@
 /// @description Insert description here
 // You can write your code in this editor
-rn = 0;
-animIdx = 0;
-modelCount = 0;
-global.zzautofile = get_autofile();
-
-if(global.zzautofile != "") {
-	var sp = filename_path(global.zzautofile);
-	modelCount = load_models_from(sp);
-} else {
-	var _wd = "";
-	if(os_type != os_gxgames) {
-		_wd = working_directory;
-	}
-	var _ld = scan_subdirs(_wd + "licensed");
+global.tabs = [0];
+function add_local_models(_local_dir) {
+	var _mc = array_length(global.resources.Models);
+	var _ld = scan_subdirs(_local_dir);
 	if(array_length(_ld) > 0) {
 		for(var _i = 0; _i < array_length(_ld); _i++) {
 			var _ld2 = scan_subdirs(_ld[_i]);
 			if(array_length(_ld2) > 0) {
 				for(var _j = 0; _j < array_length(_ld2); _j++) {
-					modelCount = load_models_from(_ld2[_j]);
+					_mc += load_models_from(_ld2[_j]);
+					global.tabs[array_length(global.tabs)] = _mc;
 				}
 			}
 		}
 	}
+	array_resize(global.tabs,array_length(global.tabs)-1);
+
+	return _mc;
 }
+
+rn = 0;
+animIdx = 0;
+modelCount = 0;
+modelIndex = 0; // 382; // 0;
+
+global.resources.Models[modelCount++] = new PDX_Model("cube/notflag.bbmod");
+global.resources.Models[modelCount++] = new PDX_Model("cube/notflagrot.bbmod");
+global.resources.Models[modelCount++] = new PDX_Model("cube/flagCheckers.bbmod");
+global.resources.Models[modelCount++] = new PDX_Model("bloke/bloke.bbmod", false, true);
+
+global.autofile = get_autofile();
+
+if(global.autofile != "") {
+	var sp = filename_path(global.autofile);
+	load_models_from(sp, global.autofile);
+}
+
+	
+if(os_type == os_gxgames) {
+	var _fl = load_json("localModels.json");
+	if(is_array(_fl)) {
+		var _mc = array_length(_fl);
+		global.resources.Models = array_create(_mc, undefined);
+		
+		for(var _i = 0; _i < _mc; _i++) {
+			global.resources.Models[_i] = new PDX_Model(_fl[_i]);
+		}
+	}
+} else {
+	add_local_models("free");
+	add_local_models("licensed");
+}
+modelCount = array_length(global.resources.Models);
 model = undefined;	
 
 oCam = instance_create_layer(0, 0, layer, oCamera);
 tx = 0;
 ty = 0;
 tz = 0;
-if(modelCount > 0) {
-	if(global.autoindex == -1) {
-		var _idx = 0;// irandom(modelCount) - 1;
-		model = global.resources.Models[_idx];
-	} else {
-		model = global.resources.Models[global.autoindex];
-	}
-} else if(global.zzautofile == "") {
-	//	model = new PDX_Model("Character/Character.bbmod", true, false, 0, 0, 0, 1, { Size: { X: 3.62, Y: 1.05, Z: 3.76} });
-	//	animIdx = 2;
-	//	model = new PDX_Model("licensed/cat/Cat_Chubby.bbmod", true, false, 180, 270, 90);
-	//	animIdx = 5;
-	//	model = new PDX_Model("Boy/Boy.bbmod", true, false, 0, 0, 90);
-	//	animIdx = 7;
-	//	model = new PDX_Model("bloke/bloke.bbmod", true, false, 270, 0, 90);
-	//	animIdx = 6;
-//	model = new PDX_Model("licensed/Zerin/RetroMedievalKit/wall_detail.bbmod", false, true);
-	// model = new PDX_Model("C:\\src\\BBEdit\\datafiles\\kaykit\\Dungeon\\banner_green.bbmod");
-	//	model.Gimbal.Rotation.Y = 180;
-	//	model = new PDX_Model("cube/hexa123-in-air.bbmod");
-	//	model = new PDX_Model("cube/hexa123-in-air.bbmod", false, false, 270, 270, 180);
+rx = 0;
+ry = 0;
+rz = 0;
 
-	//  model = new PDX_Model("cube/hexa123-ground.bbmod", false, false, 270, 270, 0);
-	//	model = new PDX_Model("cube/hexa123.bbmod", false, false, 270, 180, 0);
-	//	model = new PDX_Model("cube/cube-z-x-view.bbmod", false, false, 270, 180, 0);
-	//	model = new PDX_Model("cube/defcube.bbmod", false, false, 0, 0, 0);
-	//	model = new PDX_Model("cube/cube.bbmod", false, false, 270, 270, 0);
-
-	// bbox = new PDX_Model("bbox.bbmod");
-	if(is_undefined(model)) {
-		model = new PDX_Model("cube/castle.bbmod");
-	}
-} else {
-	if(file_exists(global.zzautofile)) {
-		model = new PDX_Model(global.zzautofile);
-	} else {
-		model = new PDX_Model("cube/castle.bbmod");
-	}
+if(modelCount == 0) {
+	global.resources.Models[modelCount] = new PDX_Model("cube/castle.bbmod");
+	modelCount = array_length(global.resources.Models);
 }
+model = global.resources.Models[modelIndex];
+#macro ActiveModel global.resources.Models[modelIndex]
+
 global.running = true;

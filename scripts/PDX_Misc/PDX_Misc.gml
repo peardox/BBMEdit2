@@ -137,6 +137,208 @@ function make_reference_plane(_trial_width = 1, _theta = undefined) {
 	return _rv;
 }
 
+function get_existing_material(matimg) {
+	var idx = -1;
+	var matcnt = array_length(global.resources.Materials);
+	for(var i = 0; i<matcnt; i++) {
+		if(global.resources.Materials[i].matname == matimg) {
+			idx = i;
+			break;
+		}
+	}
+	return idx;
+}
+
+function get_materials(matfile, trepeat = false, animated = false) {
+	var matimg = false;
+		
+	matfile = strip_ext(matfile, true);
+	var _matisimage = false;
+	if(file_exists(matfile + ".png")) {
+		matimg = matfile + ".png";
+		_matisimage = true;
+	} else if(file_exists(matfile + ".jpg")) {
+		matimg = matfile + ".jpg";
+		_matisimage = true;
+	} else {
+		matimg = matfile + ".mat";
+	}
+	
+	if(_matisimage) {
+		var _midx = get_existing_material(matimg);
+		if(_midx != -1) {
+			return _midx;
+		}
+		var matcnt = array_length(global.resources.Materials);
+
+		var _sprcnt = array_length(global.resources.Sprites);
+		global.resources.Sprites[_sprcnt] = sprite_add(matimg, 0, false, true, 0, 0);
+		if(animated) {
+			global.resources.Materials[matcnt] = BBMOD_MATERIAL_DEFAULT.clone();
+		} else {
+			global.resources.Materials[matcnt] = BBMOD_MATERIAL_DEFAULT.clone();
+		}
+		global.resources.Materials[matcnt].set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
+		global.resources.Materials[matcnt].matname = matimg;
+		global.resources.Materials[matcnt].Path = matimg;
+		if(sprite_exists(global.resources.Sprites[_sprcnt])) {
+			var _mattex = sprite_get_texture(global.resources.Sprites[_sprcnt], 0);
+			global.resources.Materials[matcnt].BaseOpacity = _mattex;
+			global.resources.Materials[matcnt].Repeat = trepeat;
+			return matcnt;
+		} else {
+			show_debug_message("Sprite missing " +  matimg);
+		}
+	} else {
+		var _midx = get_existing_material(matimg);
+		if(_midx != -1) {
+			return _midx;
+		}
+		var already_missed = false;
+		var miscnt = array_length(global.resources.Missing);
+		for(var i=0; i<miscnt; i++) {
+			if(global.resources.Missing[i] == matfile) {
+				already_missed = true;
+			}
+		}
+		if(!already_missed) {
+			global.resources.Missing[miscnt] = matfile;		
+			show_debug_message("Missing material : " + matfile);
+		}
+	}
+	return -1;
+}
+
+function extract_path(_fname) {
+	var _v = string_length(filename_name(_fname));
+	var _p = string_copy(_fname, 1, string_length(_fname) - _v);
+	if(string_char_at(_p, string_length(_p) - 1) == "/") {
+		_p = string_copy(_fname, 1, string_length(_p) - 1);
+	}
+	if(string_char_at(_p, string_length(_p) - 1) == "/") {
+		_p = string_copy(_fname, 1, string_length(_p) - 1);
+	}
+	return _p;
+}
+
+function strip_ext(_fname, include_dir = false) {
+	if(include_dir) {
+		var _v = _fname;
+	} else {
+		var _v = filename_name(_fname);
+	}
+	return string_copy(_v, 1, string_length(_v) - string_length(filename_ext(_v)));
+}
+
+function check_ext(_fn, _ext) {
+	var _res = false;
+	
+	if(string_lower(filename_ext(_fn)) == string_lower(_ext)) {
+		_res = true;
+	}
+	
+	return _res;
+}
+
+function load_models_from(_dir, _autofile = "") {
+	// Remove trailing slashes
+	while(string_char_at(_dir, string_length(_dir)) == "/") {
+		_dir = string_delete(_dir, string_length(_dir), 1);
+	}
+	
+	var _i = array_length(global.resources.Models);
+	array_resize(global.resources.Models, _i + 1000);
+	var _cnt = 0;
+	var _fmask = "";
+
+	if(os_type == os_windows) {
+		_fmask = _dir + "/*.bbmod";
+	} else {
+		_fmask = _dir + "/*";
+	}
+	var _bfile = file_find_first(_fmask, fa_none); 
+	
+	while (_bfile != "") {
+		if(check_ext(_bfile, ".bbmod")) {
+			if(_autofile == _dir + "/" + _bfile) {
+				global.autoindex = _i;
+			}
+			global.resources.Models[_i + _cnt++] = new PDX_Model(_dir + "/" + _bfile);
+		}
+		_bfile = file_find_next();
+	}
+	
+	array_resize(global.resources.Models, _i + _cnt);
+
+	file_find_close();
+
+	return _cnt;
+}
+
+function scan_subdirs(dir) {
+	// Remove trailing slashes
+	while(string_char_at(dir, string_length(dir)) == "/") {
+		dir = string_delete(dir, string_length(dir), 1);
+	}
+	
+	var _dirs = array_create(100, "");
+	var _cnt = 0;
+	var _fmask = dir + "/*.*";
+	
+	var _bfile = file_find_first(_fmask, fa_directory); 
+	
+	while (_bfile != "") {
+		_dirs[_cnt++] = dir + "/" + _bfile;
+		_bfile = file_find_next();
+	}
+	
+	array_resize(_dirs, _cnt);
+
+	file_find_close();
+
+	return _dirs;
+}
+
+function add_mtl_colour(matcol, r, g, b) {
+	var _matidx = array_length(global.resources.Materials);
+	var _mat = BBMOD_MATERIAL_DEFAULT.clone();
+//	_mat.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
+	_mat.matname = matcol + ".mat";
+	_mat.set_base_opacity(new BBMOD_Color(round(255 * r), round(255 * g), round(255 * b), 1));
+	global.resources.Materials[_matidx] = _mat;
+}
+
+function get_autofile(_ext = ".bbmod") {
+	var _ret = "";
+	if(parameter_count() == 2) {
+		var _fn = parameter_string(1);
+		if(check_ext(_fn, ".bbmod")) {
+			_ret = _fn;
+		}
+	}
+	return _ret;
+}
+
+function QuatToEuler(Quat) {
+	if(is_instanceof(Quat, BBMOD_Quaternion)) {
+		var _euler = new BBMOD_Matrix(Quat.ToMatrix()).ToEuler();
+		return new BBMOD_Vec3(_euler[0], _euler[1], _euler[2]);
+	} else {
+		throw("Hissy fit with non-Quaternion in QuatToEuler");
+	}
+}
+
+function NegateVec3(v) {
+	if(is_instanceof(v, BBMOD_Vec3)) {
+		v.X = -v.X; 
+		v.Y = -v.Y; 
+		v.Z = -v.Z; 
+		return v;
+	} else {
+		throw("Hissy fit with non-Vec3 in NegateVec3");
+	}
+}
+
 function get_sprite_assets() {
     var surf,no,i,ds_map;
     ds_map = argument0;
@@ -236,12 +438,12 @@ function set_camera(_camera) {
 	}
 }
 
-function wrap(v, max) {
-	while(v > max) {
-		v -= max;
+function wrap(v, vmax) {
+	while(v >= vmax) {
+		v -= vmax;
 	}
 	while(v < 0) {
-		v += max;
+		v += vmax;
 	}
 	
 	return v;
@@ -352,6 +554,7 @@ function set_screen(req_fs = false, fnt = undefined, font_size = 24) {
 
 }
 
+// Load a json file
 function load_json(afile) {
 	var _res = undefined;
 	
@@ -368,6 +571,39 @@ function load_json(afile) {
 		}
 	} else {
 		show_debug_message("Can't find : " + afile);
+	}
+	
+	return _res;
+}
+
+function export_pdx_modellist() {
+	var _l = array_create(array_length(global.resources.Models), "");
+	for(var _i = 0; _i < array_length(global.resources.Models); _i++) {
+		_l[_i] = global.resources.Models[_i].mpath +
+				 global.resources.Models[_i].mname + ".bbmod";
+	}
+	save_json("c:\\temp\\localModels.json", _l);
+}
+
+// Save a json file
+function save_json(afile, data) {
+	var _res = undefined;
+
+	try {
+		var _json = json_stringify(data);
+
+		var _file = file_text_open_write(afile);
+		try {
+			file_text_write_string(_file, _json);
+		} catch(_exception) { 
+			show_debug_message("Save - Error : in " + afile + " save " + _exception.message);
+			_res = undefined;
+			game_end();
+		} finally {
+			file_text_close(_file);
+		}
+	} catch(_exception) { 
+			show_debug_message("Save - Caught JSON Error : " + _exception.message);
 	}
 	
 	return _res;
@@ -507,6 +743,44 @@ function SelectConfigPath() {
 	return _info;
 }
 
+function GetAABB(_model, _node=undefined, _transform=undefined, _outMin=undefined, _outMax=undefined)
+{
+    var _returnAABB = (_node == undefined);
+
+    _node ??= _model.RootNode;
+    _transform ??= new BBMOD_DualQuaternion();
+    _outMin ??= new BBMOD_Vec3(infinity);
+    _outMax ??= new BBMOD_Vec3(-infinity);
+
+    _transform = _transform.Mul(_node.Transform);
+
+    for (var i = 0; i < array_length(_node.Meshes); ++i)
+    {
+        var _meshIndex = _node.Meshes[i];
+        var _mesh = _model.Meshes[_meshIndex];
+        _outMin.Minimize(_transform.Transform(_mesh.BboxMin)).Copy(_outMin);
+        _outMax.Maximize(_transform.Transform(_mesh.BboxMax)).Copy(_outMax);
+    }
+
+    for (var i = 0; i < array_length(_node.Children); ++i)
+    {
+        var _child = _node.Children[i];
+        GetAABB(_model, _child, _transform, _outMin, _outMax);
+    }
+
+    if (_returnAABB)
+    {
+        return new BBMOD_AABBCollider().FromMinMax(_outMin, _outMax);
+    }
+}
+
+/*
+var _aabb = GetAABB(model); // Returns a BBMOD_AABBCollider
+bbmod_material_reset();
+_aabb.DrawDebug();
+bbmod_material_reset();
+*/
+
 function setRotationBase(v) {
 	var _rx, _ry, _rz;
 	
@@ -523,3 +797,5 @@ function setRotationBase(v) {
 global.is_game_restarting = false;
 #macro OSINFO global.info
 OSINFO = SelectConfigPath();
+
+

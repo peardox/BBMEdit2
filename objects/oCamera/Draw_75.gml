@@ -28,22 +28,26 @@ if(keyboard_check_pressed(vk_f10)) {
 	set_camera(camera); 
 }
 
-if(!keyboard_check(vk_shift)) {
-	if(keyboard_check_pressed(vk_right)) {
-		global.camHAngle = wrap(global.camHAngle - 11.25, 360);
-		set_camera(camera);
-	}
-	if(keyboard_check_pressed(vk_left)) {
-		global.camHAngle = wrap(global.camHAngle + 11.25, 360);
-		set_camera(camera);
-	}
-	if(keyboard_check_pressed(vk_down)) {
-		global.camVAngle = clamp(global.camVAngle - 11.25, -90, 90);
-		set_camera(camera);
-	}
-	if(keyboard_check_pressed(vk_up)) {
-		global.camVAngle = clamp(global.camVAngle + 11.25, -90, 90);
-		set_camera(camera);
+
+if(!keyboard_check(vk_shift) && !keyboard_check(vk_control) && !keyboard_check(vk_alt)) {
+
+	if(!keyboard_check(vk_shift)) {
+		if(keyboard_check_pressed(vk_right)) {
+			global.camHAngle = wrap(global.camHAngle - 11.25, 360);
+			set_camera(camera);
+		}
+		if(keyboard_check_pressed(vk_left)) {
+			global.camHAngle = wrap(global.camHAngle + 11.25, 360);
+			set_camera(camera);
+		}
+		if(keyboard_check_pressed(vk_down)) {
+			global.camVAngle = clamp(global.camVAngle - 11.25, -90, 90);
+			set_camera(camera);
+		}
+		if(keyboard_check_pressed(vk_up)) {
+			global.camVAngle = clamp(global.camVAngle + 11.25, -90, 90);
+			set_camera(camera);
+		}
 	}
 }
 
